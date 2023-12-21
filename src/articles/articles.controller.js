@@ -14,13 +14,18 @@ function hasData(req, res, next) {
 }
 
 function dataHas(propertyName) {
-  return (request, response, next) => {
-    const { data = {} } = request.body;
+  const methodName = `dataHas('${propertyName}')`;
+  return (req, res, next) => {
+    req.log.debug({ __filename, methodName, body: req.body });
+    const { data = {} } = req.body;
     const value = data[propertyName];
     if (value) {
+      req.log.trace({ __filename, methodName, valid: true });
       return next();
     }
-    next({ status: 400, message: `Article must include a ${propertyName}` });
+    const message = `Article must include a ${propertyName}`;
+    next({ status: 400, message: message });
+    req.log.trace({ __filename, methodName, valid: false }, message);
   };
 }
 
