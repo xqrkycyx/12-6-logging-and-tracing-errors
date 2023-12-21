@@ -2,10 +2,15 @@ const service = require("./articles.service");
 const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
 
 function hasData(req, res, next) {
+  const methodName = "hasData";
+  req.log.debug({ __filename, methodName, body: req.body });
   if (req.body.data) {
+    req.log.trace({ __filename, methodName, valid: true });
     return next();
   }
-  next({ status: 400, message: "body must have data property" });
+  const message = "body must have data property";
+  next({ status: 400, message: message });
+  req.log.trace({ __filename, methodName, valid: false }, message);
 }
 
 function dataHas(propertyName) {
