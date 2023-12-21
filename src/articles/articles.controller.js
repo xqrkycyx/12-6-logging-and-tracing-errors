@@ -31,7 +31,10 @@ async function create(req, res) {
 }
 
 async function list(req, res) {
+  const methodName = "list";
+  req.log.debug({ __filename, methodName });
   const data = await service.list();
+  req.log.trace({ __filename, methodName, return: true, data });
   res.json({
     data,
   });
